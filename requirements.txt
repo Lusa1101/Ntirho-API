@@ -15,5 +15,3 @@ pydub
 python-multipart
 huggingface_hub
 dotenv
-email
-ssl
