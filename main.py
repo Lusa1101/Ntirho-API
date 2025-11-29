@@ -6,11 +6,6 @@ from tempfile import NamedTemporaryFile
 from huggingface_hub import login
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
-import email, smtplib, ssl
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 from fastapi import FastAPI
 
@@ -18,13 +13,13 @@ from fastapi import FastAPI
 login(token=os.getenv("HF_TOKEN")) 
 
 # 2. Load your fine-tuned Sepedi Whisper model
-asr = pipeline(
-    task="automatic-speech-recognition",
-    model="Ntirho/whisper-finetuned-sepedi_model",
-    tokenizer="Ntirho/whisper-finetuned-sepedi_model",
-    feature_extractor="Ntirho/whisper-finetuned-sepedi_model",
-    generate_kwargs={"max_length": 128}
-)
+# asr = pipeline(
+#     task="automatic-speech-recognition",
+#     model="Ntirho/whisper-finetuned-sepedi_model",
+#     tokenizer="Ntirho/whisper-finetuned-sepedi_model",
+#     feature_extractor="Ntirho/whisper-finetuned-sepedi_model",
+#     generate_kwargs={"max_length": 128}
+# )
 
 asr2 = pipeline(
     task="automatic-speech-recognition",
@@ -37,23 +32,23 @@ asr2 = pipeline(
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-@app.post("/transcribe")
-async def transcribe(file: UploadFile = File(...)):
-    # Save uploaded file temporarily
-    with NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
-        tmp.write(await file.read())
-        tmp_path = tmp.name
+# @app.post("/transcribe")
+# async def transcribe(file: UploadFile = File(...)):
+#     # Save uploaded file temporarily
+#     with NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+#         tmp.write(await file.read())
+#         tmp_path = tmp.name
 
-    # Run transcription
-    result = asr(tmp_path)
+#     # Run transcription
+#     result = asr(tmp_path)
 
-    # Clean up temp file
-    os.remove(tmp_path)
+#     # Clean up temp file
+#     os.remove(tmp_path)
 
-    # Print
-    print("transcription", result["text"])
+#     # Print
+#     print("transcription", result["text"])
 
-    return {"transcription": result["text"]}
+#     return {"transcription": result["text"]}
 
 # Second model version
 @app.post("/transcribe_2")
